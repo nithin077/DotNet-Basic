@@ -12,9 +12,31 @@ namespace Product.Controllers
     {
         [HttpGet]
         [Route("GetAllStudents")]
-        public ActionResult<IEnumerable<Student>> GetStudentDetails()
+        public ActionResult<IEnumerable<StudentDTO>> GetStudentDetails()
         {
-            return CollegeRepository.Student;
+            //var student = new List<StudentDTO>();
+            //foreach(var item in CollegeRepository.Student)
+            //{
+            //    StudentDTO studentObj = new StudentDTO()
+            //    {
+            //        id = item.id,
+            //        name = item.name,
+            //        email = item.email,
+            //        age = item.age
+            //    };
+            //    student.Add(studentObj);
+            //}
+
+            //LINQ
+            var student = CollegeRepository.Student.Select(s => new StudentDTO()
+            {
+                id = s.id,
+                name = s.name,
+                email = s.email,
+                age = s.age
+
+            });
+            return Ok(student);
         }
 
         [HttpGet]
@@ -49,6 +71,27 @@ namespace Product.Controllers
             CollegeRepository.Student.Remove(student);
             return true;
 
+        }
+
+        [HttpPost]
+        [Route("CreateStudent")]
+
+        public ActionResult<StudentDTO> CreateStudent([FromBody]StudentDTO responseFromUI)
+        {
+            if (responseFromUI == null) return BadRequest();
+            var newId = CollegeRepository.Student.LastOrDefault().id + 1;
+            Student stu = new Student
+            {
+                id = newId,
+                name = responseFromUI.name,
+                email = responseFromUI.email,
+                age = responseFromUI.age
+            };
+            CollegeRepository.Student.Add(stu);
+
+            responseFromUI.id = stu.id;
+            return Ok(responseFromUI);
+           // return CreatedAtRoute($"GetStudentById{responseFromUI.id}",  responseFromUI);
         }
     }
 }

@@ -79,17 +79,18 @@ namespace Product.Controllers
         public ActionResult<StudentDTO> CreateStudent([FromBody]StudentDTO responseFromUI)
         {
             if (responseFromUI == null) return BadRequest();
+
             var newId = CollegeRepository.Student.LastOrDefault().id + 1;
-            Student stu = new Student
+            Student stud = new Student
             {
                 id = newId,
                 name = responseFromUI.name,
                 email = responseFromUI.email,
                 age = responseFromUI.age
             };
-            CollegeRepository.Student.Add(stu);
+            CollegeRepository.Student.Add(stud);
 
-            responseFromUI.id = stu.id;
+            responseFromUI.id = stud.id;
             return Ok(responseFromUI);
            // return CreatedAtRoute($"GetStudentById{responseFromUI.id}",  responseFromUI);
         }

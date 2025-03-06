@@ -89,7 +89,6 @@ namespace Product.Controllers
                 age = responseFromUI.age
             };
             CollegeRepository.Student.Add(stud);
-
             responseFromUI.id = stud.id;
             return Ok(responseFromUI);
            // return CreatedAtRoute($"GetStudentById{responseFromUI.id}",  responseFromUI);
